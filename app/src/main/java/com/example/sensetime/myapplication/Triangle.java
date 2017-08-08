@@ -38,7 +38,7 @@ public class Triangle {
     }
 
     public void draw() {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(vertices.length * 4);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
         byteBuffer.order(ByteOrder.nativeOrder());
         buffer = byteBuffer.asFloatBuffer();
         buffer.put(vertices);
@@ -63,8 +63,9 @@ public class Triangle {
         GLES20.glVertexAttribPointer(verticesHandle, 3, GLES20.GL_FLOAT, false, 3 * 4, buffer);
 
         int colorHandle = GLES20.glGetUniformLocation(program, "vColor");
-        GLES20.glUniform4fv(colorHandle, 4, color, 0);
+        GLES20.glUniform4fv(colorHandle, 1, color, 0);
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+        GLES20.glDisableVertexAttribArray(verticesHandle);
     }
 }
